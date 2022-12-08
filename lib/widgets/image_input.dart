@@ -53,7 +53,7 @@ class _ImageInputState extends State<ImageInput> {
                   fit: BoxFit.cover,
                   width: double.infinity,
                 )
-              : Text('No Image Taken'),
+              : Text('No Image Taken!'),
           alignment: Alignment.center,
         ),
         SizedBox(

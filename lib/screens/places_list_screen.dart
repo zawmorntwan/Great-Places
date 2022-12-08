@@ -21,37 +21,48 @@ class PlacesListScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: Consumer<GreatePlaces>(
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text('Got no places yet, start adding some!'),
-              SizedBox(
-                height: 8,
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, AddPlaceScreen.routeName);
-                },
-                child: Text('Add Place'),
+      body: FutureBuilder(
+        future: Provider.of<GreatePlaces>(context, listen: false)
+            .fetchAndSetPlaces(),
+        builder: (ctx, snapshot) => snapshot.connectionState ==
+                ConnectionState.waiting
+            ? Center(
+                child: CircularProgressIndicator(),
               )
-            ],
-          ),
-        ),
-        builder: (ctx, greatPlaces, ch) => greatPlaces.items.length <= 0
-            ? ch!
-            : ListView.builder(
-                itemCount: greatPlaces.items.length,
-                itemBuilder: (ctx, i) => ListTile(
-                  leading: CircleAvatar(
-                    backgroundImage: FileImage(greatPlaces.items[i].image),
+            : Consumer<GreatePlaces>(
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('Got no places yet, start adding some!'),
+                      SizedBox(
+                        height: 8,
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.pushNamed(
+                              context, AddPlaceScreen.routeName);
+                        },
+                        child: Text('Add Place'),
+                      )
+                    ],
                   ),
-                  title: Text(greatPlaces.items[i].title),
-                  onTap: () {
-                    // Go to detail page! 
-                  },
                 ),
+                builder: (ctx, greatPlaces, ch) => greatPlaces.items.length <= 0
+                    ? ch!
+                    : ListView.builder(
+                        itemCount: greatPlaces.items.length,
+                        itemBuilder: (ctx, i) => ListTile(
+                          leading: CircleAvatar(
+                            backgroundImage:
+                                FileImage(greatPlaces.items[i].image),
+                          ),
+                          title: Text(greatPlaces.items[i].title),
+                          onTap: () {
+                            // Go to detail page!
+                          },
+                        ),
+                      ),
               ),
       ),
     );
